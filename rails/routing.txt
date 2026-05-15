@@ -1,0 +1,30 @@
+#routing
+##routingとは
+ブラウザから送られてきたHTTPリクエスト（URLとメソッド）を解析し、対応するコントローラーの「アクション」へ橋渡しをする機能。
+Webアプリケーションにおける「URLとコントローラーアクションの対応関係」を定義する要素。
+
+##config/routes.rbファイルの基本
+config/routes.rbファイルは、Railsアプリケーション内のルーティングを設定する場所。
+例えば、/articlesというURLに対応するコントローラーアクションを指定。
+
+###ex.
+Rails.application.routes.draw do
+  get '/articles', to: 'articles#index'
+end
+
+この設定は、「/articlesにアクセスされたらArticlesControllerのindexアクションを実行する」という意味
+
+デフォルトでは、CRUD操作に対応。(Create、Read、Update、Delete)
+
+##RESTfulルーティング
+RESTfulルーティングは、RailsにおいてWebアプリケーションのURL設計を効果的に行うためのアプローチです。REST（Representational State Transfer）は、Webアプリケーションの設計原則の一つであり、リソースを表現し、HTTPメソッドを使用して操作する方法を指す。
+
+##ルートヘルパーとは何か
+ルートヘルパーは、名前付きルートを使用して、コントローラーアクションやリソースへのURLを生成するためのメソッドのこと。これにより、コードがわかりやすくなり、保守性が向上する。
+
+##主なルートヘルパー
+- root_path	root_path	ルートURL
+- article_path	article_path(@article)	特定の記事の詳細ページへのURLを生成する。
+- articles_path	articles_path	記事一覧ページへのURLを生成する。
+- new_article_path	new_article_path	新規記事作成ページへのURLを生成する。
+- edit_article_path	edit_article_path(@article)	記事編集ページへのURLを生成する。
