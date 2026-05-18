@@ -1,0 +1,26 @@
+#MVCとは
+View（インターフェイス）・Controller（ModelとViewの制御）という役割で明確に分離しよう!という設計モデルのこと。
+このモデルによってRailsは保守の容易性、機能単位でのテストが可能になっている。
+
+##モデルとは
+Modelはデータベース（以下：DB)を扱う機能を持ち、DB内に作られたテーブルを操作する定義体のようなもの。
+例:
+~~~~~~~~~~~~~~~~~~~~~~
+略
+create_table "aaas", force: :cascade do |t|
+  t.string "name"
+  t.string "member-color"
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+end
+略
+~~~~~~~~~~~~~~~~~~~~~~~
+
+##Railsでの命名規則
+テーブル...スネークケース→	複数形
+モデル...アッパーキャメルケース→	単数形
+
+具体例
+テーブル名	モデル名	モデルファイル名
+clients	Client	client.rb       client.rb
+client_orders	Client_Order	client_order.rb
