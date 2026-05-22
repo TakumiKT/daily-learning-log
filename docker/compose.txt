@@ -12,6 +12,19 @@ Dockerの文脈で言うと「コンテナイメージ」と言われ、コン�
 
 ##Docker file
 イメージを作成するための設計図。
+
+Dockerfileを専用コマンドにて組み立てる（buildする）ことで、Dockerイメージが作成されるのです。そうしてDockerイメージを実行する（runする）ことによって、Dockerコンテナが作成される。
+
+###Dockerfileで使用される主なコマンド
+
+FROM：ベースイメージを指定する。すべてのDockerfileの最初に記述する必須命令。
+WORKDIR：以降の命令を実行する作業ディレクトリを設定する。
+COPY：ホストマシンのファイルをコンテナ内にコピーする。
+RUN：イメージのビルド時にコマンドを実行しする。パッケージのインストールなどに使う。
+CMD：コンテナ起動時に実行するデフォルトコマンドを指定する。
+EXPOSE：コンテナが使用するポート番号を明示する。
+ENV：環境変数を設定する。
+
 例
 FROM php:7.4-apache
 RUN apt-get update && apt-get install -y vim zip unzip
@@ -27,3 +40,4 @@ CMD ["apache2-foreground"]
 docker hub（正確にはそれ以外のリポジトリでも可能）からベースコンテナのイメージをダウンロード（docker pull）。
 ローカルPC内に持って来れたらそのイメージと自分で作ったDockerfileを合わせて独自のイメージを作成（docker build もしくは docker compose build）。
 独自のイメージをコンテナとして起動する（docker run もしくは docker compose up）。
+
