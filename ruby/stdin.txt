@@ -71,3 +71,6 @@ puts a + b で 8 を出力
 a, b = gets.split.map(&:to_i)
 puts a + b
 
+
+
+
