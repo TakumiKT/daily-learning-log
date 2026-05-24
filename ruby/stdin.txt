@@ -74,3 +74,43 @@ puts a + b
 
 
 
+line = gets
+=> "a\n"
+line = gets.chomp
+=> "a"
+1行に複数要素の受け取り
+標準入力
+a b c
+
+# 配列で受け取る
+line = gets.split(' ')
+=> ["a", "b", "c"]
+
+# 独立した変数で受け取る
+a, b, c = gets.split
+a
+=> "a"
+b
+=> "b"
+c
+=> "c"
+splitはデフォルトで半角スペース区切りなので(' ')を省略するのも可
+
+複数行に1要素の受け取り
+標準入力
+a
+b
+c
+
+line = readlines
+=> ["a\n", "b\n", "c\n"]
+line = readlines(chomp: true)
+=> ["a", "b", "c"]
+複数行に複数要素の受け取り
+標準入力
+a b c
+d e f
+
+lines = readlines(chomp: true).map(&:split)
+=> [["a", "b", "c"],
+
