@@ -13,5 +13,6 @@
 * Docker
 * Git / GitHub
 * SQL
+* その他言語
 * 基本情報処理技術者
 
