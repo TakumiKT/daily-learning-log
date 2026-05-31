@@ -41,3 +41,54 @@ docker hub（正確にはそれ以外のリポジトリでも可能）からベ�
 ローカルPC内に持って来れたらそのイメージと自分で作ったDockerfileを合わせて独自のイメージを作成（docker build もしくは docker compose build）。
 独自のイメージをコンテナとして起動する（docker run もしくは docker compose up）。
 
+
+##Dockerhub を使用している中でよくあるエラー
+###service "web" is not running エラー(dockerのコンテナの一つが勝手に止まってしまう等)
+これは docker compose exec web ... や docker compose logs web をしようとしたときに、web コンテナが起動していない状態で出るエラー。
+原因は以下である事が多い：
+- docker compose up をまだしていない
+- docker compose up はしたけど、コンテナがすぐ停止してしまった（アプリ起動エラーや依存サービス未起動）
+- 名前が web ではない
+
+*対処手順*
+まずコンテナの状態を確認
+
+\docker compose ps
+web が Up になっているか確認
+もし Exit 状態ならログを確認
+Exit 0 → 正常終了（スクリプトが終わっただけ）
+Exit 1 や Exit 137 → エラー終了や強制終了
+
+
+\docker compose logs <サービス名>
+アプリケーションが起動できない原因が出てくる（例: gem不足、DB未接続、設定ミス）
+起動していないなら、まず立ち上げる
+RailsアプリならエラーメッセージやGem不足が出る
+NodeやPythonアプリも同様にスタックトレースが出る
+
+終了コードを直接確認
+docker inspect <コンテナID> --format='{{.State.ExitCode}}'
+0 → 正常終了
+1〜 → エラーコード
+
+
+\docker compose up --build
+"--build" を付けると Dockerfile の変更も反映される。
+
+###コンテナの状態確認
+\docker compose ps
+web のステータスが Exit か Up かを確認する。
+
+###ログ確認（原因特定）
+\docker compose logs web
+
+
+##よくある Rails 初学者環境でのエラー例
+cannot load such file -- mysql2
+→ Gemfile に mysql2 が無い or bundle install 未実行
+Access denied for user 'root'@'xxx'
+→ database.yml の username / password が db コンテナの設定と一致していない
+Can't connect to MySQL server on 'db' (111)
+→ DBコンテナは起動してるが、接続待機中のうちに Rails が落ちた
+
+
