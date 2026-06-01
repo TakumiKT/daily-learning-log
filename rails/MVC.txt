@@ -79,3 +79,8 @@ end
 ⑥モデル（Post）から受け取ったデータをコントローラ（PostsController）で処理する。
 ⑦コントローラ（PostsController）からビュー（index.html.erb)へレスポンスが返り、ブラウザに結果が表示される。
 
+##DRYの原則
+Railsnに限らず、プログラミングの界隈全体にDRY（Don’t Repeat Yourself）原則というものがある。
+DRYはDon’t Repeat Yourselfの略であり、「同じプログラムを複数の場所に記述するのはやめよう」という意味。
+じプログラムが繰り返し記述されたファイルは、仕様が変更された際のエラー発生率や修正漏れのリスクが高くなる。
+
