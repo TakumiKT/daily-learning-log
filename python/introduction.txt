@@ -24,6 +24,9 @@ int 型(整数)
 float 型(少数)
 \- 文字列型(string 型)
 \- ブール型(boolean 型)
+\- list	リスト型	[1, 2, 3], [‘apple’, ‘banana’, ‘cherry’]
+\- tuple	タプル型	(1, 2, 3), (‘apple’, ‘banana’, ‘cherry’)
+\- dict	辞書型
 
 ブール型とはTrue または False の2つのうち、どちらか1つを持つ型のこと。
 
