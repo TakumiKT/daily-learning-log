@@ -267,3 +267,112 @@ puts [1, 2, 3]
 print [1, 2, 3]
 # 出力:
 # [1, 2, 3]
+
+##改行されていない入力を改行させて出力する方法と、逆に改行されている入力を改行させないで出力する方法
+###迷ったときの覚え方
+改行して出したい → puts
+改行したくない → print
+1行の入力を分けたい → split
+複数の要素をくっつけたい → join
+入力の末尾の改行を消したい → chomp
+###まとめ
+改行なし入力 → 改行あり出力
+puts gets.split
+
+改行あり入力 → 改行なし出力
+n = gets.to_i
+n.times do
+  print gets.chomp
+end
+
+
+##入力が1行で、
+apple banana orange
+
+のように スペース区切り で並んでいるとする。
+
+これを1つずつ改行して出したいなら、split で分けて puts する。
+
+words = gets.split
+puts words
+
+#出力
+apple
+banana
+orange
+
+###仕組み
+gets で1行読む
+split で空白ごとに分ける
+puts は配列を渡すと、要素ごとに改行して出力する
+
+##1文字ずつ改行したい場合
+
+入力が
+abcde
+
+なら、1文字ずつにして改行することもできる。
+chars = gets.chomp.chars
+puts chars
+
+#出力
+a
+b
+c
+d
+e
+
+
+改行されている入力を改行させないで出力する方法
+たとえば入力が
+apple
+banana
+orange
+のように 1行ずつ 与えられるとする。
+
+これを改行なしでつなげて出したいなら、print を使う。
+
+3.times do
+  word = gets.chomp
+  print word
+end
+#出力
+applebananaorange
+仕組み
+gets.chomp で1行読む
+chomp で末尾の改行を消す
+print は改行しないで出力する
+スペース区切りで1行にしたい場合
+words = []
+
+3.times do
+  words << gets.chomp
+end
+
+puts words.join(" ")
+
+#出力
+apple banana orange
+
+join(" ") で、配列の要素をスペースでつなげている。
+
+##puts と print の違い
+
+###puts
+最後に改行する
+
+puts "apple"
+puts "banana"
+
+出力
+apple
+banana
+
+####print
+改行しない
+print "apple"
+print "banana"
+
+出力
+applebanana
+
