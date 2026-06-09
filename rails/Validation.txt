@@ -1,0 +1,105 @@
+#モデルにおいてのバリデーション
+##バリデーションとは
+バリデーションとはユーザーからの入力データが要件や仕様に適合しているかどうかを確認するプロセスのこと。
+不正確なデータ、予期しないデータがシステムに入力されることを防ぎ、データの信頼性とセキュリティを確保する役割がある。
+RailsにおいてはバリデーションはActiveRecordの機能の一部である。
+必須入力、文字列の長さ、数値、範囲チェックなどがある。
+
+##バリデーションヘルパー
+###presence
+使用頻度が高い。
+定義すると「空でないか」を検証する。
+下記のように記述するとnameカラムにちゃんと値が入っているかを検証する。
+\validates :name, presence: true
+
+###absence
+presenceとは逆で定義すると「空であるか」を検証します。
+\validates :カラム名, absence: true
+
+上のコードはvalidates_absence_ofを使って書くこともできる。
+\validates_absence_of :カラム名
+
+\uniqueness
+値が一意（unique）であり重複していないかを検証する。
+メールアドレスなど重複しては困るときに使う。
+
+###validates :カラム名, uniqueness: true
+このように定義するとカラムにすでに存在している内容と同じものがあるかどうかを検証することができる。
+すでに値が存在しているものと同じ値であれば保存されない。
+
+上のコードはvalidates_uniqueness_ofを使って書くこともできる。
+\validates_uniqueness_of :カラム名
+
+###scopeオプション
+一意性チェックの範囲を限定する別の属性を指定するオプション。
+ex.
+class Tag < ApplicationRecord
+  belongs_to :user
+  validates :name, uniqueness: { scope: :user }
+end
+
+上のように定義すると一人のユーザーがタグの名前に同じものを使えないという意味になる。
+scopeオプションをつけないと全てのユーザーが同じ名前のものを使えなくなってしまう。
+つまり他人がつけた名前は自分も使えなくなるが、scopeオプションを使えば、他人がつけていても自分がつけていなければ名前をつけられるようになる。
+
+###case_sensitiveオプション
+一意性チェックをするときに大文字か小文字を区別するかどうかを指定できるオプション。
+デフォルトはtrueになっているので区別をする。
+区別したくない時はfalseとする。
+
+
+class User < ApplicationRecord
+  validates :name, uniqueness: { case_sensitive: false }
+end
+
+###acceptance
+チェックボックスがオンになっているかどうかを検証する。
+サービスに対する利用条項を読んで、「同意した」などのチェックボックスがあるサイトが実例。
+そのときチェックボックスにチェックが入っているかを検証するときなどに利用する。
+
+
+\validates :カラム名, acceptance: true
+上のコードはvalidates_acceptance_ofを使って書くことができる。
+\validates_acceptance_of :カラム名
+
+###confirmati 
+2つのフォームで入力された内容が完全に一致するかを検証する。
+メールアドレスのフォームとメールアドレスの確認フォームのが全く同じであるか検証したいときなどに利用する。
+
+\validates :カラム名, confirmation: true
+一致しているか確認したいもう一つのカラム名は末尾に_confirmationをつける。
+こちらはフォームでのみ使うカラムなのでデータベースにこのカラムを作成する必要はない。
+
+メールアドレスを例にすると下記のようになる。
+\validates :email, confirmation: true
+このように記述するとemailカラムとemail_confirmationカラムの入力値が一致しているかを検証する。
+
+上のコードはvalidates_confirmation_ofを使って書くこともできる。
+\validates_confirmation_of :emailon
+
+###inclusion
+値が指定した文字になっているかを検証する。
+基本的にinオプションと一緒に使用する。
+
+
+### 1つのワードの指定
+\validates :カラム名, inclusion: { in: ["検証したい文字"] }
+
+### 複数のワードの指定
+\validates :カラム名, inclusion: { in: ["検証したい文字1", "検証したい文字2"] }
+上の複数のワードの指定時のコードは下記のように%記法を使って書くこともできます。
+
+\validates :カラム名, inclusion: { in: %w(検証したい文字1 検証したい文字2) }
+
+数字の1から100まで以外は保存されないようにするには下記のように記述する。
+
+validates :size, inclusion: { in: 1..100 }
+上のコードはvalidates_inclusion_ofを使って書くこともできる。
+
+validates_inclusion_of :size, in: 1..100
+他にも例えば文字の大きさを入力するフォームがあったとき、必ず「大」、「中」、「小」のいずれかの文字にしてもらいたい場合があるとする。
+その時は下記のように指定すればこの3文字以外の文字が入力された時には保存がされないようにすることができる。
+
+validates :size, inclusion: { in: %w(大 中 小) }
+この時はたとえ「特大」のように文字の中に「大」が入っていたとしても「大」か「中」か「小」という文字でなければ保存されない。
+このように特定の文字だけを保存したい時に使用する。
