@@ -103,3 +103,119 @@ validates_inclusion_of :size, in: 1..100
 validates :size, inclusion: { in: %w(大 中 小) }
 この時はたとえ「特大」のように文字の中に「大」が入っていたとしても「大」か「中」か「小」という文字でなければ保存されない。
 このように特定の文字だけを保存したい時に使用する。
+
+
+###exclusion
+指定された値が含まれていないかを検証する。
+基本的にinオプションと一緒に使用する。
+
+\validates :カラム名, exclusion: { in: ["検証したい文字1", "検証したい文字2"] }
+上のコードは下記のように%記法を使って書くこともできる。
+
+\validates :カラム名, exclusion: { in: %w(検証したい文字1 検証したい文字2) }
+保存したくない文字を指定する時に使う。
+例えばユーザー名に「管理人」とつけて欲しくない場合は下記のように指定する。
+
+\validates :name, exclusion: { in: %w(管理人) }
+このようにすると「管理人」と入力された場合は保存されないようにすることができる。
+「管理人A 」の場合は保存される。
+
+上のコードはvalidates_exclusion_ofを使って書くこともできる。
+
+\validates_exclusion_of :name, in: %w(管理人)
+
+###length
+値の長さを検証する。
+下記のオプションを使って定義する。
+
+オプション名	内容
+minimum	最小値を指定します
+maximum	最大値を指定します
+in	長さの範囲を指定します
+is	値の長さを指定します
+具体的には下記のように使用します。
+
+
+validates :カラム名, length: { minimum: 2 } #最低でも2文字以上であるか
+validates :カラム名, length: { maximum: 6 } #6文字以内であるか
+validates :カラム名, length: { in: 5..10 } #5文字から10文字以内であるか
+validates :カラム名, length: { is: 5 } #5文字であるか
+上のコードはvalidates_length_ofを使って書くこともできる。
+
+\validates_length_of :first_name, maximum: 6
+
+###format
+正規表現と属性の値が合致するかの検証をする。
+withオプションと併用して使う。
+
+\validates :カラム名, format: { with: 正規表現 }
+下記のように正規表現で指定する。
+
+
+\validates :name, format: { with: /\A[a-zA-Z]+\z/ }
+上のコードは半角英文字だけ入力を許可することを意味する。
+なので「pikawaka」は保存され、「ピカわか」だと保存されない。
+
+上のコードはvalidates_format_ofを使って書くこともできる。
+
+\validates_format_of :name, with: /\A[a-zA-Z]+\z/
+
+用途	正規表現
+全角ひらがな	/\p{hiragana}/
+/\A[ぁ-んー－]+\z/
+全角カタカナ	/\p{katakana}/
+/\A[ァ-ヶー－]+\z/
+半角カタカナ	/\A[ｧ-ﾝﾞﾟ]+\z/
+全角ひらがな・カタカナ	/\A[ぁ-んァ-ヶー－]+\z/
+漢字	/\A[一-龥]+\z/
+全角ひらがな・漢字	/\A[ぁ-ん一-龥]/+\z
+全角ひらがな・カタカナ・漢字	/\A[ぁ-んァ-ヶ一-龥]/+\z
+半角英文字（小文字）	/\A[a-z]+\z/
+半角英文字（大文字）	/\A[A-Z]+\z/
+半角英文字（全て）	/\A[a-zA-Z]+\z/
+/\A[a-z]+\z/i
+全角数値	/\A[０-９]+\z/
+半角数値	/\A[0-9]+\z/
+半角小文字英文字・数値	/\A[a-z0-9]+\z/
+半角大文字英文字・数値	/\A[A-Z0-9]+\z/
+半角英文字・数値	/\A[a-zA-Z0-9]+\z/
+/\A[a-z0-9]+\z/i
+半角英数字を両方含む	/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i
+郵便番号（ハイフンあり7桁）	/\A\d{3}[-]\d{4}\z/
+郵便番号（ハイフンなし7桁）	/\A\d{7}\z/
+email	/\A([@\s]+)@((?:[-a-z0-9]+.)+[a-z]{2,})\z/i
+/\A[\w+-.]+@[a-z\d-]+(.[a-z\d-]+)*.[a-z]+\z/i
+など
+電話番号（ハイフンなし10・11桁）	/\A\d{10,11}\z/
+例えばパスワードに半角英数字を両方含めなければいけないときは下記のように記述する。
+
+\validates :password, format: { with: /\A(?=.&#042;?[a-z])(?=.&#042;?\d)[a-z\d]+\z/i }
+
+\numericality
+属性に数値のみが使われているかを検証する。
+
+\validates :カラム名, numericality: true
+オプションとして以下の制約を指定することができる。
+
+オプション	制約
+:only_integer	trueにすると整数のみを指定
+:greater_than	指定された値よりも大きくなければならないことを指定
+:greater_than_or_equal_to	指定された値と等しいか、それよりも大きくなければならないことを指定
+:equal_to	指定された値と等しくなければならないことを指定
+:less_than	指定された値よりも小さくなければならないことを指定
+:less_than_or_equal_to	指定された値と等しいか、それよりも小さくなければならないことを指定
+:other_than	渡した値以外の値でなければならないことを指定
+:odd	trueにすると奇数であるかを指定
+:even	trueにすると偶数であるかを指定
+例えば整数のみを許可する場合は下記のように記述する。
+
+##整数の指定
+validates :price, numericality: { only_integer: true }
+100以上1,000以下の場合は下記のように記述する。
+
+##範囲の指定
+validates :price, numericality: { greater_than_or_equal_to: 100, less_than_or_equal_to: 1_000 }
+上のコードはvalidates_numericality_ofを使って書くこともでる。
+
+\validates_numericality_of :price, greater_than_or_equal_to: 100, less_than_or_equal_to: 1_000
+
