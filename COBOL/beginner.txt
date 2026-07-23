@@ -1,0 +1,60 @@
+#COBOL
+##COBOLとは
+COBOLとは、1959年にアメリカで生まれた事務処理用に開発されたプログラミング言語。
+COBOL(Common Business Oriented Language)の意味で、「事務処理用の高級言語」として開発された。
+
+##特徴
+1.COBOLの大きな特徴として「事務処理用のプログラムを効率よく開発できる」ことが挙げらる。
+2.人間の言葉に近い文法でプログラムを記述できるため、習得が容易でプログラミングの入門にも最適。
+3.単純な順ファイルから、相対・牽引ファイルなど、さまざまなファイルを扱う機能が提供されている。
+4.ファイルに大量のデータを書き込んだり、ソートやマージしてデータを並べ替えるといった作業を、高速で処理することが可能。
+5.事務処理で必要な帳票の作成や印刷などの処理が可能。
+6.データを10進数で表現できるため、金額や各種データの確認が容易に行うことができる。
+7.COBOLは、WindowsやUnix/Linuxなど、さまざまなコンピュータで利用できるため、移植性が極めて高い言語。
+8.歴史が古く安定した言語で堅牢性に優れており、信頼性が高いと言えます。そのため、大規模なシステムの開発でよく使用される。
+
+##プログラムの書き方
+COBOLは、大きく分けて4つの部で構成されている。それぞれの部は「見出し」がある。
+
+プログラムは「見出し部（IDENTIFICATION DIVISION）」から始まり、「環境部（ENVIRONMENT DIVISION.）」、「データ部（DATA DIVISION）」「手続き部（PROCEDURE DIVISION）」と処理を順に記述していく。
+
+見出し部以外は省略することが可能で、部（DIVISION）の中にはいくつかの節（SECTION）や段落がる。
+
+###見出し部（IDENTIFICATION DIVISION）
+見出し部はCOBOLプログラムを識別するための部で、見出し部のみ節は無い。PROGRAM-IDには作成するプログラム名などの情報を記述する。
+
+\IDENTIFICATION DIVISION.
+\PROGRAM-ID. [プログラム名など].
+
+###環境部（ENVIRONMENT DIVISION）
+環境部はプログラムを適用するコンピュータ名や、環境変数などの情報の定義を行う構成節（CONFIGURATION SECTION）と、プログラムファイルを使用する場合に記述する入出力節（INPUT-OUTPUT SECTION）がある。
+
+\ENVIRONMENT DIVISION.
+\CONFIGURATION SECTION.
+\INPUT-OUTPUT SECTION.
+\FILE-CONTROL.
+\SELECT ファイル項目 ASSIGN TO 'ファイル名'
+
+###データ部（DATA DIVISION）
+データ部はファイル節（FILE SECTION）、作業場所節（WORKNG-STORAGE SECTION）、連絡節（LINKAGE SECTION）、通信節（COMMUNICATION SECTION）などから構成される。主にプログラムで使用するデータ項目やファイルのレコードの宣言を行う。
+
+\DATA DIVISION.
+\FILE SECTION.
+\FD ファイル項目.
+\01 ファイルレコード.
+\05 データ項目1 PIC 9(5).
+\05 データ項目2 PIC X(3).
+
+###手続き部（PROCEDURE DIVISION）
+手続き部では主に各種処理を宣言したり、実行される手続きやエラーになった場合の処理内容を記述する。
+また、STOP文を記述すれば、プログラムを終了することができる。
+
+\PROCEDURE DIVISION.
+\MAIN SECTION.
+ 
+実行処理...
+ 
+\STOP RUN.
+
+
+ 
