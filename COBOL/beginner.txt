@@ -56,5 +56,144 @@ COBOLは、大きく分けて4つの部で構成されている。それぞれ�
  
 \STOP RUN.
 
+##ChatGPTによるローカルでの実行について解説
 
- 
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. HELLO.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  WS-NAME PIC X(20).
+
+       PROCEDURE DIVISION.
+           DISPLAY "INPUT YOUR NAME: " WITH NO ADVANCING
+           ACCEPT WS-NAME
+           DISPLAY "HELLO, " WS-NAME
+           STOP RUN.
+
+行の先頭に空白が入っているのは、固定形式で書いているためです。
+GnuCOBOLの固定形式では、基本的に次のように列の役割が決まります。
+
+1～6列目   行番号などの領域
+7列目      コメントや継続を表す領域
+8～72列目  COBOLのプログラムを書く領域
+
+GnuCOBOLは固定形式を標準で扱い、--fixedまたは-fformat=fixedでも明示できます。
+
+初学者の間は、ソース中の変数名や表示内容を英数字中心にしてください。日本語を使うと、NetCOBOLとGnuCOBOL、UTF-8とShift_JISの違いが一気に絡んできます。
+
+###コンパイルして実行する
+
+MSYS2 UCRT64で作業フォルダへ移動します。
+
+cd /c/cobol-work
+
+コンパイルします。
+
+cobc -x --fixed -std=cobol85 -o HELLO.exe HELLO.COB
+各オプションの意味は次のとおりです。
+
+-x             実行可能ファイルを作る
+--fixed        固定形式として読み込む
+-std=cobol85   COBOL 85に近い文法でチェックする
+-o HELLO.exe   出力するファイル名
+
+GnuCOBOLの-std=cobol85は、ベンダー独自拡張をできるだけ使わず、複数のCOBOLコンパイラで通りやすいソースを書く練習に向いています。
+
+実行します。
+./HELLO.exe
+
+
+###コマンドプロンプトから使えるようにする
+
+現場の「DOS」に近づけるため、次はMSYS2の画面ではなく、Windowsのコマンドプロンプトから実行します。
+C:\cobol-workに次のファイルを作ります。
+BUILD.CMD
+内容は以下です。
+
+@echo off
+setlocal
+
+set "PATH=C:\msys64\ucrt64\bin;%PATH%"
+cd /d C:\cobol-work
+
+echo COBOL program is compiling...
+
+cobc -x --fixed -std=cobol85 -o HELLO.exe HELLO.COB
+
+if errorlevel 1 (
+    echo.
+    echo BUILD ERROR
+    exit /b 1
+)
+
+echo.
+echo BUILD SUCCESS
+echo.
+
+HELLO.exe
+
+endlocal
+
+コマンドプロンプトで実行します。
+cd /d C:\cobol-work
+BUILD.CMD
+
+これで、
+
+COBOLソースをコンパイルする
+エラーがあれば中断する
+成功したら実行する
+
+という、業務のバッチ処理に近い流れを体験できます。
+
+###入出力ファイルを使うバッチ処理
+
+料金管理システムでは、画面操作だけでなく、
+
+入力ファイルを読む
+↓
+料金を計算する
+↓
+結果ファイルを出す
+
+というバッチ処理が出てくる可能性があります。
+
+たとえば、プログラムに入力を渡して結果をファイルへ保存する場合は次のようにします。
+
+HELLO.exe < INPUT.TXT > OUTPUT.TXT
+
+意味は、
+
+< INPUT.TXT    INPUT.TXTを標準入力として渡す
+> OUTPUT.TXT   出力をOUTPUT.TXTへ書き込む
+
+です。
+
+出力結果を表示するには、
+
+type OUTPUT.TXT
+
+とします。
+これらをまとめたRUN.CMDは、たとえば次のように書けます。
+
+@echo off
+setlocal
+
+set "PATH=C:\msys64\ucrt64\bin;%PATH%"
+cd /d C:\cobol-work
+
+cobc -x --fixed -std=cobol85 -o HELLO.exe HELLO.COB
+
+if errorlevel 1 (
+    echo BUILD ERROR
+    exit /b 1
+)
+
+HELLO.exe < INPUT.TXT > OUTPUT.TXT
+
+type OUTPUT.TXT
+
+endlocal
+
+コマンドプロンプトとバッチファイルによる自動処理は、現在のWindowsでも正式にサポートされている仕組みです。
